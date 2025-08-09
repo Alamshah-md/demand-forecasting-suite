@@ -1,32 +1,36 @@
 # Demand Forecasting Suite
 
-This repository provides a suite of forecasting tools for weekly retail demand, hotel occupancy, and agricultural supply across the **UAE**, **Australia**, and **New Zealand**. Each notebook demonstrates three models—ARIMA, Exponential Smoothing, and XGBoost—and evaluates accuracy using MAPE.
+This suite provides time-series forecasting examples using **ARIMA** and **XGBoost** for synthetic datasets:
+- Retail demand (UAE)
+- Hotel occupancy (AU)
+- Seasonal agri supply (NZ)
 
-## Repository Structure
-- `notebooks/`: Forecasting notebooks for each use case.
-- `charts/`: Forecast comparison plots and residual/backtest visuals.
-- Synthetic CSVs: `retail_demand_uae.csv`, `hotel_occupancy_au.csv`, `agri_supply_nz.csv`.
+## Problem → Approach → Results
+For each case we:
+1. Generate synthetic weekly data capturing trends and seasonality.
+2. Split the series into 80% training and 20% test segments.
+3. Fit an ARIMA model (1,1,1) and an XGBoost regression with lag features.
+4. Evaluate performance using MAPE and SMAPE metrics and visualize forecasts & residuals.
 
-## When to Use Which Model
+## When to use which model
+- **ARIMA**: Best for univariate series with clear linear trends and seasonality.
+- **XGBoost**: Handles nonlinear patterns and interactions when provided with lagged features. Useful when seasonality isn’t strictly sinusoidal.
 
-| Model | Suitable For | Pros | Cons |
-|------|--------------|------|------|
-| **ARIMA** | Stable demand with seasonality | Interpretability, simple tuning | Assumes linearity |
-| **Exponential Smoothing** | Short-term forecasting | Captures trends quickly | May lag on sudden shifts |
-| **XGBoost** | Complex, non-linear patterns | Handles exogenous variables | Requires feature engineering |
+## Results summary
+| Dataset | MAPE (ARIMA) | SMAPE (ARIMA) | MAPE (XGBoost) | SMAPE (XGBoost) | Notes |
+|--------|--------------|---------------|---------------|-----------------|------|
+| retail_demand_uae | 6.29% | 6.26% | 7.92% | 8.28% | synthetic weekly series |
+| hotel_occupancy_au | 24.16% | 27.80% | 10.47% | 11.16% | synthetic weekly series |
+| agri_supply_nz | 38.75% | 30.84% | 12.58% | 12.86% | synthetic weekly series |
 
-MAPE and SMAPE metrics are reported within each notebook to guide selection.
+## Files
+- `data/`: CSVs for each case
+- `charts/`: Forecast & residual plots for each model and dataset
+- `notebooks/analysis.ipynb`: Example notebook performing ETL, model fitting, and charting
 
-## Industry Relevance
+## Industry relevance and metrics
+- **Retail/FMCG (UAE)**: Anticipate weekly demand to optimize inventory and promotions.
+- **Tourism/Hospitality (AU)**: Forecast occupancy to set room rates and staffing levels.
+- **Agriculture (NZ)**: Project seasonal supply to plan storage and distribution.
 
-- **Retail/FMCG (UAE)**: Forecasting weekly demand helps optimize inventory and reduce stockouts.
-- **Tourism/Hospitality (Australia)**: Predicting hotel occupancy supports revenue management and staffing decisions.
-- **Agriculture (New Zealand)**: Anticipating seasonal supply ensures efficient logistics and market pricing.
-
-## How to Run
-
-Open any notebook in `notebooks/` and run all cells. Datasets are stored in the repository for convenience.
-
-![UAE Retail Forecast](./charts/uae_retail_forecast.png)
-
-Licensed under the MIT License.
+Models are evaluated using **MAPE** (Mean Absolute Percentage Error) and **SMAPE** (Symmetric MAPE). Lower values indicate better accuracy.
